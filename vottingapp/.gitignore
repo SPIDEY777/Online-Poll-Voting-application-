@@ -9,7 +9,7 @@ target/
 .classpath
 .factorypath
 .project
-.settings
+.settingsgit rm -r --cached .idea
 .springBeans
 .sts4-cache
 
