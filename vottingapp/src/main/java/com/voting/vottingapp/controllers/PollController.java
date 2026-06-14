@@ -4,6 +4,7 @@ package com.voting.vottingapp.controllers;
 import com.voting.vottingapp.Services.PollService;
 import com.voting.vottingapp.model.Poll;
 import com.voting.vottingapp.repositories.PollRepository;
+import com.voting.vottingapp.request.Vote;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -41,6 +42,10 @@ public class PollController {
 
 
 
+@PostMapping("/vote")
+public void vote(@RequestBody Vote vote){
+    pollService.vote(vote.getPollId(), vote.getOptionIndex().intValue());
 
+}
 
 }
