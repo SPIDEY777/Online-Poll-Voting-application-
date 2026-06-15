@@ -13,6 +13,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("api/polls")
+@CrossOrigin(origins = "http://localhost:4200/")
 public class PollController {
     private PollService pollService;
 
@@ -44,7 +45,10 @@ public class PollController {
 
 @PostMapping("/vote")
 public void vote(@RequestBody Vote vote){
-    pollService.vote(vote.getPollId(), vote.getOptionIndex().intValue());
+
+    pollService.
+            vote(vote.getPollId(),
+                    vote.getOptionIndex().intValue());
 
 }
 
