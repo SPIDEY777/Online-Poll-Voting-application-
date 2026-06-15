@@ -8,7 +8,7 @@ import { Observable } from 'rxjs';
 })
 export class PollService {
 
-  private baseUrl = 'http://localhost:8080/api/polls';
+  private baseUrl = '/api/polls';
 
   constructor(private http: HttpClient) {}
 
@@ -29,4 +29,3 @@ export class PollService {
      return  this.http.post<void>(url, { pollId, optionIndex });
   }
 }
-

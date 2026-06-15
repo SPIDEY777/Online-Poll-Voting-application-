@@ -1,4 +1,91 @@
-<h1>spideys angular app</h1>
-<button type="button" class="btn btn-success">Success</button>
-<button type="button" class="btn btn-primary btn-lg">Large button</button>
-<button type="button" class="btn btn-secondary btn-lg">Large button</button>
+<section class="poll-page">
+  <header class="app-header">
+    <p class="app-kicker">Live voting dashboard</p>
+    <h1>Poll Application</h1>
+  </header>
+
+  <div class="poll-card">
+    <h2>Create Poll</h2>
+
+    <div *ngIf="createSuccessMessage" class="alert alert-success">{{ createSuccessMessage }}</div>
+    <div *ngIf="createErrorMessage" class="alert alert-danger">{{ createErrorMessage }}</div>
+
+    <form [formGroup]="pollForm" (ngSubmit)="createPoll()" novalidate>
+      <div class="mb-3">
+        <label for="pollQuestion" class="form-label">Poll question</label>
+        <input
+          id="pollQuestion"
+          type="text"
+          class="form-control"
+          formControlName="question"
+          placeholder="Choose an option"
+          [class.is-invalid]="pollForm.controls.question.touched && pollForm.controls.question.invalid"
+        />
+        <div *ngIf="pollForm.controls.question.touched && pollForm.controls.question.invalid" class="invalid-feedback">
+          Question cannot be empty.
+        </div>
+      </div>
+
+      <div formArrayName="options" class="mb-3">
+        <div class="d-flex align-items-center justify-content-between mb-2">
+          <label class="form-label mb-0">Options</label>
+          <button type="button" class="btn btn-sm btn-outline-secondary" (click)="addOption()">
+            Add option
+          </button>
+        </div>
+
+        <div *ngFor="let option of options.controls; let optionIndex = index" class="input-group option-row">
+          <input
+            type="text"
+            class="form-control"
+            [formControlName]="optionIndex"
+            [placeholder]="'Option ' + (optionIndex + 1)"
+            [class.is-invalid]="option.touched && option.invalid"
+          />
+          <button
+            type="button"
+            class="btn btn-outline-danger"
+            (click)="removeOption(optionIndex)"
+            [disabled]="options.length <= 2"
+          >
+            Remove
+          </button>
+          <div *ngIf="option.touched && option.invalid" class="invalid-feedback">
+            Option cannot be empty.
+          </div>
+        </div>
+      </div>
+
+      <button type="submit" class="btn btn-primary" [disabled]="isCreating">
+        <span *ngIf="isCreating" class="spinner-border spinner-border-sm me-2" aria-hidden="true"></span>
+        {{ isCreating ? 'Creating...' : 'Create Poll' }}
+      </button>
+    </form>
+  </div>
+
+  <div *ngIf="isLoading" class="alert alert-info">Loading polls from {{ apiUrl }}...</div>
+
+  <div *ngIf="errorMessage" class="alert alert-danger">{{ errorMessage }}</div>
+
+  <div *ngIf="!isLoading && !errorMessage && polls.length === 0" class="alert alert-secondary">
+    No polls found.
+  </div>
+
+  <h2 class="poll-list-title">Available Polls</h2>
+
+  <article *ngFor="let poll of polls" class="poll-card">
+    <h3>{{ poll.question }}</h3>
+
+    <div class="poll-options">
+      <button
+        *ngFor="let option of poll.options; let optionIndex = index"
+        type="button"
+        class="btn btn-outline-primary poll-option"
+        (click)="vote(poll.id, optionIndex)"
+      >
+        <span>{{ option.voteOption }}</span>
+        <span class="badge text-bg-primary">{{ option.voteCount }} votes</span>
+      </button>
+    </div>
+  </article>
+</section>
